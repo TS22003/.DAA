@@ -1,53 +1,59 @@
 //memory function
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
 
-int max(int a, int b){
-	return (a>b) ? a : b;
+int n,cap,opc=0;
+int f[10][10],w[10],v[10];
+
+int max(int a,int b)
+{
+	return a>b?a:b;
 }
 
-int t[100][100], v[100], w[100], n, m, i, j;
-
-int knap(int i, int j){
-	if (t[i][j]==-1){
-		if (j<w[i])
-			t[i][j] = knap(i-1,j);
-		else
-			t[i][j] = max(knap(i-1,j),v[i]+knap(i-1,j-w[i]));
-	}
-	return t[i][j];
-}
-
-void main(){
-	
-	printf("No. of Items>> ");
-	scanf("%d",&n);
-	printf("Sack Capacity>> ");
-	scanf("%d",&m);
-	
-	
-	printf("Weight\tValue\n");
-	for(i=1;i<n+1;i++){
-		scanf("%d\t%d",&w[i],&v[i]);
-	}
-	
-	for(i=0;i<n+1;i++){
-		for(j=0;j<m+1;j++){
-			if (i==0||j==0)
-				t[i][j]=0;
+int mFkS(int i ,int j)
+{
+	if(f[i][j]==-1)
+	{
+			opc++;
+			int val;
+			if(j-w[i]>=0)
+				val=max(mFkS(i-1,j),v[i]+mFkS(i-1,j-w[i]));
 			else
-				t[i][j]=-1;
-		}
+				val=mFkS(i-1,j);
+			f[i][j]=val;
 	}
-	
-	printf("Maximum Value: %d\n",knap(n,m));
-	
-	printf("Composition:\n");
-	for(i=n;i>0;i--){
-		if (t[i][m] != t[i-1][m]){
-			printf("%d ",i);
-			m = m-w[i];
+}
+
+void comp()
+{
+	int k=0,j=cap,subset[n];
+	for(int i=n;i>=1;i--)
+		if(f[i][j]!=f[i-1][j])
+		{
+			subset[k++]=i;
+			j-=w[i];
 		}
+	printf("The composition of the knapsack is : ");
+	for(int i=0;i<k;i++)
+		printf("%d ",subset[i]);
+}
+
+void main()
+{
+	printf("Enter the number of items and knapSack capacity : ");
+	scanf("%d %d",&n,&cap);
+	for(int i=1;i<=n;i++)
+	{
+		printf("Enter the value and weight for item %d : ",i);
+		scanf("%d%d",&v[i],&w[i]);
 	}
-	printf("\n");
+	for(int i=0;i<=n;i++)
+		f[i][0]=0;
+	for(int j=0;j<=cap;j++)
+		f[0][j]=0;
+	for(int i=1;i<=n;i++)
+		for(int j=1;j<=cap;j++)
+			f[i][j]=-1;
+	printf("The optimal solution is : %d\n",mFkS(n,cap)); 
+	comp();
+	printf("\nThe operation count is : %d\n",opc);
 }
