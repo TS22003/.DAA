@@ -3,7 +3,7 @@
 
 int gcd;
 
-int mod(int a , int b){
+int mod(int a , int b){// euclid
     int count = 0;
     int r = 1;
     while(r!=0){
@@ -16,7 +16,7 @@ int mod(int a , int b){
     return count;
 }
 
-int sub(int a, int b){//
+int sub(int a, int b){//mod euiclid
     int count = 0;
     while ( b != 0){
         ++count;
