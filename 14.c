@@ -1,41 +1,67 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-void main(){
-    int n;
-    printf("Enter num of vertices >> ");
+int cost[10][10], n, min_cost = 0, min, a, b, visited[10] = {0}, edges = 0, count = 0;
+
+void createGraph()
+{
+    int i, j;
+    printf("Enter no. of vertices: ");
     scanf("%d", &n);
-    int graph[n][n];
-
-    printf("Enter the vertices >> ");
-    for(int i = 0; i<n; ++i)
-        for(int j = 0; j<n; ++j)
-            scanf("%d", &graph[i][j]);
-
-    int *vis = (int *)calloc(sizeof(int), n);
-
-    vis[0] = 1;
-    int x, y, min, edge = 0, cost = 0;
-    printf("\n\nVertex  ->> Edge \n");
-    while (edge < n - 1){
-        min = 99999;
-        for(int i = 0; i<n; ++i){
-            if ( vis[i] ){
-                for(int j = 0; j<n; ++j){
-                    if ( !vis[j] && graph[i][j] != 0 ){
-                        if ( min > graph[i][j] ){
-                            x = i;
-                            y = j;
-                            min = graph[i][j];
-                        }
+    printf("Enter Weight Matrix: \n");
+    for (i = 1; i <= n; ++i)
+    {
+        for (j = 1; j <= n; j++)
+        {
+            scanf("%d", &cost[i][j]);
+            if (cost[i][j] == 0)
+                cost[i][j] = 1000;
+        }
+    }
+}
+void prim()
+{
+    int i, j;
+    
+    printf("Minimum Cost Spanning Tree\n");
+    visited[1] = 1;
+    while (edges < n - 1)
+    {
+        min = 1000;
+        for (i = 1; i <= n; i++)
+        {
+            count++;
+            if (visited[i])
+            {
+                for (j = 1; j <= n; j++)
+                {
+                    if (cost[i][j] < min && !visited[j])
+                    {
+                        min = cost[i][j];
+                        a = i;
+                        b = j;
                     }
                 }
             }
         }
-        printf("%d -- %d  ->>  %d\n", x, y, graph[x][y]);
-        cost+=min;
-        vis[y] = 1;
-        ++edge;
+        if(min<1000)
+            printf("%d -> %d : Cost-%d\n", a, b, min);
+        else
+        {  
+            printf("The Graph is disconnected,Prim's Algorithm not applicable\n");
+            exit(1);
+        }
+        min_cost += min;
+        visited[b] = 1;
+        edges++;
     }
-    printf("\nMST cost >> %d\n", cost);
+
+    printf("Minimum Cost: %d\n", min_cost);
+}
+void main()
+{
+    int i, j;
+    createGraph();
+    prim();
+    printf("Operation Count : %d\n", count);
 }
