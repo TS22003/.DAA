@@ -1,73 +1,66 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-FILE *fpc;
-int gcdm(int m, int n)
-{
-int r,count=0;
-while(n!=0)
-{
-count++;
-r = m%n;
-m = n;
-n = r;
-}
-fprintf(fpc,"%d\t",count);
-return m;
+//GCD of two non-negative integers
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+FILE *fp1,*fp2;
+
+//Euclid's algorithm
+void gcd1(int m,int n){
+    int count=0,rem;
+    while(n!=0){
+        count++;
+        rem=m%n;
+        m=n;
+        n=rem;
+    }
+    fprintf(fp1,"%d\t",m);
+    fprintf(fp2,"%d\t",count);
 }
 
-int gcds(int m,int n)
-{
-int count=0;
-while(m!=n)
-{
-count++;
-if(m>n)
-m=m-n;
-else
-n=n-m;
-}
-fprintf(fpc,"%d\t",count);
-return m;
+//Subtraction method
+void gcd2(int m,int n){
+    int count=0;
+    while(m!=n){
+        count++;
+        if(m>n) m=m-n;
+        else   n=n-m;
+    }
+    fprintf(fp1,"%d\t",m);
+    fprintf(fp2,"%d\t",count);
 }
 
-int gcdc(int m, int n)
-{
-int min,count=0;
-min = (m<n)?m:n;
-while(min!=1)
-{
-count++;
-if(m%min==0)
-  if(n%min==0)
-    break;
-min--;
-}
-fprintf(fpc,"%d\n",count);
-return min;
+//Consecutive integer method
+void gcd3(int m,int n){
+    int count=0,t;
+    t=(m<n)?m:n;
+    while(n!=1){
+        count++;
+        if(m%t==0)
+            if(n%t==0)
+                break;
+        t=t-1;
+    }
+    fprintf(fp1,"%d\n",t);
+    fprintf(fp2,"%d\n",count);
 }
 
-void main()
-{
-FILE *fp = fopen("GCD.txt","w+");
-fpc = fopen("GCDC.txt","w+");
-fprintf(fp,"m\tn\tGCDM\tGCDS\tGCDC\n");
-
-int m,n,min;
-int gm,gs,gc;
-srand(time(0));
-for(int i=1;i<=10;i++)
-{
-m = (rand()+1)%100+m;
-n = (rand()+1)%100+n;
-min = m>n ? n : m;
-fprintf(fpc,"%d\t%d\t%d\t",m,n,min);
-gm = gcdm(m,n);
-gs = gcds(m,n);
-gc = gcdc(m,n);
-fprintf(fp,"%d\t%d\t%d\t%d\t%d\n",m,n,gm,gs,gc);
-}
-fclose(fp);
-fclose(fpc);
-
+void main(){
+    int m,n;
+    srand(time(0));
+    system("gcd.txt");
+    system("gcdcount.txt");
+    fp1=fopen("gcd.txt","w");
+    fp2=fopen("gcdcount.txt","w");
+    for(int i=1;i<=10;i++){
+        m=rand()%100;
+        n=rand()%100;
+        fprintf(fp1,"%d\t %d\t",m,n);
+        fprintf(fp2,"%d\t %d\t",m,n);
+        gcd1(m,n);
+        gcd2(m,n);
+        gcd3(m,n);
+    }
+    fclose(fp1);
+    fclose(fp2);
 }
