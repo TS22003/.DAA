@@ -1,132 +1,75 @@
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define AL 10;
 
-int n, i, j, src, cost[10][10], d[10] = {0}, removed[10] = {0}, count = 0;
-int heapsize;
-struct vertex
-{
-    int id;
-    int dist;
-} heap[10];
-typedef struct vertex ver;
+int cost[10][10], n, visited[10] = {0}, opc = 0;
+int distance[10], parent[10];
 
-// Min Heap function declaration
-void swap(struct vertex *a, struct vertex *b)
+void createGraph()
 {
-    struct vertex temp = *a;
-    *a = *b;
-    *b = temp;
-}
-void heapSort(struct vertex arr[], int n)
-{
-    for (int i = n / 2 - 1; i >= 0; i--)
-    {
-        heapify(arr, n, i);
-    }
-}
-// Min heap function declaration end
-
-void heapify(struct vertex arr[], int n, int i)
-{
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-
-    if (left < n && arr[left].dist < arr[largest].dist)
-        largest = left;
-    if (right < n && arr[right].dist < arr[largest].dist)
-        largest = right;
-
-    if (largest != i)
-    {
-        swap(&arr[i], &arr[largest]);
-        heapify(arr, n, largest);
-    }
-}
-void makegraph()
-{
-    // Make Graph
-    printf("Enter the total number of vertices:");
+    int i, j;
+    printf("Enter no. of vertices: ");
     scanf("%d", &n);
-    printf("Enter the cost matrix of the Graph\n");
-    for (i = 0; i < n; i++)
+    printf("Enter Weight Matrix: \n");
+    for (i = 1; i <= n; ++i)
     {
-        for (j = 0; j < n; j++)
+        for (j = 1; j <= n; j++)
         {
             scanf("%d", &cost[i][j]);
             if (cost[i][j] == 0)
-                cost[i][j] = INT_MAX;
+                cost[i][j] = 1000;
         }
     }
-
-    // Initialise the source vertex distance to 0 and rest all to infinity(INT_MAX)
-    printf("Enter the source vertex:");
-    scanf("%d", &src);
-    for (i = 0; i < n; i++)
-    {
-        d[i] = INT_MAX;
-    }
-    d[src] = 0;
 }
-// returns the min of the heap and heapifies the rest of the elements
-ver deleteheap(ver heap[])
+void Dijkstra(int start)
 {
-    ver min = heap[0];
-    heap[0] = heap[heapsize - 1];
-    heapsize = heapsize - 1;
-    heapify(heap, heapsize, 0);
-    return min;
-}
-void dijkstra()
-{
-    for (i = 0; i < n; i++)
+    int count, mindistance, nextnode, i, j;
+    for (i = 1; i <= n; i++)
     {
-        heap[i].id = i;
-        heap[i].dist = INT_MAX;
+        distance[i] = cost[start][i];
+        parent[i] = start;
+        visited[i] = 0;
     }
-    heap[src].dist = 0;
-    heapsize = n;
-    // pulling source to index 0
-    heapSort(heap, heapsize);
-    while (count < n)
-    {
-        ver minvertex = deleteheap(heap);
-        int u = minvertex.id;
-        removed[u] = 1;
-        count++;
 
-        for (i = 0; i < n; i++)
+    distance[start] = 0;
+    visited[start] = 1;
+    count = 0;
+
+    while (count < n - 1)
+    {
+        mindistance = 999;
+
+        for (i = 1; i <= n; i++)
         {
-            if (!removed[i] && cost[u][i] != INT_MAX)
+            opc++;
+            if (distance[i] < mindistance && !visited[i])
             {
-                if ((d[u] + cost[u][i]) < d[i])
-                {
-                    d[i] = (d[u] + cost[u][i]);
-                    for (int o = 0; o < heapsize; o++)
-                    {
-                        if (heap[o].id == i)
-                        {
-                            heap[o].dist = heap[o].dist < d[i] ? heap[o].dist : d[i];
-                            break;
-                        }
-                    }
-
-                    heapSort(heap, heapsize);
-                }
+                mindistance = distance[i];
+                nextnode = i;
             }
         }
+        visited[nextnode] = 1;
+        for (i = 1; i <= n; i++)
+            if (!visited[i])
+                if (mindistance + cost[nextnode][i] < distance[i])
+                {
+                    distance[i] = mindistance + cost[nextnode][i];
+                    parent[i] = nextnode;
+                }
+        count++;
     }
+    for (i = 1; i <= n; i++)
+        if (i != start&&distance[i]<1000)
+        {
+            printf("%d to %d Distance : %d\n", start, i, distance[i]);
+        }
 }
 void main()
 {
-    makegraph();
-    dijkstra();
-    printf("Shortest path id %d is:\n", src);
-    for (i = 0; i < n; i++)
-    {
-        if (src != i)
-            printf("%d -> %d = %d\n", src, i, d[i]);
-    }
+    int source;
+    createGraph();
+    printf("Enter the source : ");
+    scanf("%d", &source);
+    printf("Minimum Distance from Source(%d) to other Vertices\n", source);
+    Dijkstra(source);
+    printf("Operation Count : %d\n", opc);
 }
