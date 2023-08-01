@@ -16,7 +16,7 @@ int mod(int a , int b){
     return count;
 }
 
-int sub(int a, int b){
+int sub(int a, int b){//
     int count = 0;
     while ( b != 0){
         ++count;
@@ -29,7 +29,7 @@ int sub(int a, int b){
     return count;
 }
 
-int repeat(int a, int b){
+int repeat(int a, int b){//consec
     int count = 0, min, temp;
     if ( a < b)
         min = a;
