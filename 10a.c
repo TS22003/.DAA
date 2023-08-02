@@ -8,7 +8,7 @@
  int in[100], v[100], s[100], t[100]; // 
  int f = 0, r = -1;                   // 
  int n, scount = 0; 
- computeindegree() 
+ void computeindegree() 
  { 
      for (int i = 0; i < n; i++) 
      { 
