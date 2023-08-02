@@ -27,6 +27,7 @@ void main()
     {
         node = stack[top--];
         printf(" => %c", node + 65);
+        count++;
         for (i = 0; i < n; i++)
         {
             if (graph[node][i])
