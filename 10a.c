@@ -39,4 +39,8 @@ void main()
         }
     }
 }
+    if(count!=n)
+        printf("The graph contains cycles and is not a DAG\n");
+    else
+        printf("\n Topological sorting completed\n");
 }
