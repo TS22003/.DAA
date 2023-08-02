@@ -1,87 +1,86 @@
 // Test
 
-
 #include<stdio.h>
-#include<stdlib.h>
 
-int graph[100][100], visited[100], isCyclic = 0;
-int dfsCount = 0, count = 0;
-int dcount=0;
-int path[100];
-int d;
-void dfs(int n, int start, int parent) {
-    visited[start] = 1;
-     path [start]=1;
-    count++;
-    printf("--> %c ", start+65);
-    for(int i=0; i<n; i++) {
-        
-        if(d==1)
-        {
-          if(i!=parent && graph[start][i] && visited[i]==1 && path[i]==1)
-           isCyclic = 1;
-        }
-          else
-          {
-        if(i!=parent && graph[start][i] && visited[i])
-            isCyclic = 1;
-          }
-            dcount++;
-        if(graph[start][i] && visited[i]==0)
-            dfs(n, i, start);
-    }
-     path [start]=0;
+int a[10][10],visit[10],con[20],j=0,acy=1,n,c=0,stk[10],top=-1,p[10];
+
+void dfs(int st)
+{
+	visit[st]=0;
+	stk[++top]=st;
+	int s;
+	p[st]=0;
+	while(top!= -1)
+	{
+	    s= stk[top];
+	    visit[s]=1;
+	    for(int i=1;i<=n;i++)
+	    {	
+	    	if(a[s][i]&&visit[i]==1&&i!=p[s])
+	    		acy=0;
+		    if(a[s][i]&&visit[i]==-1)
+			{
+			    stk[++top]=i;
+			    visit[i]=0;
+			    p[i]=s;
+			    break;
+			}
+	    }
+	    if(stk[top]==s)
+	    {
+	        visit[stk[top]]=2;
+	        con[j++]=s;
+	        top--;
+	    }
+	}
 }
 
-    
-void main(){
-    int n, start;
-    dfsCount = 0;
-     count = 0;
-      dcount=0;
-      d=0;
-    printf("Enter the number of nodes in the graph:\n");
-    scanf("%d", &n);
-    printf("Enter the Adjacency Matrix:\n");
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            scanf("%d", &graph[i][j]);
-        }
-        visited[i] = 0;
-        path[i] =0;
-    }
-    printf("enter is the 1 graph is directed to:\n");
-    scanf("%d", &d);
-
-    printf("the Adjacency Matrix:\n");
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            printf("%d ", graph[i][j]);
-        }
-        printf("\n");
-    }
-    isCyclic =0;
-    printf("\nDFS traversal starting from node %c\n", 65);
-    dfs(n, 0, -1);
-    dfsCount++;
-    if(count == n)
-        printf("\nThe Graph is connected\n");
-    else {
-        printf("\nThe Graph is not connected\n");
-        start = 1;
-        while(count != n) {
-            if(visited[start] != 1) {
-                printf("\n");
-                dfs(n, start, -1);
-                dfsCount++;
-            }
-            start++;
-        }
-    }
-    printf("\nThe number of components is %d\n", dfsCount);
-
-    if(isCyclic) 
-        printf("\nThe graph is cyclic\n");
-    else
-        printf("\nThe graph is not cyclic\n");
+void concyc()
+{
+	int i,f=1;
+	for(i=1;i<=n;i++)
+		if(visit[i]==-1)
+		{
+			f=0;
+			con[j++]=0;
+			dfs(i);
+		}
+	if(f)
+		printf("Graph is connected\n");
+	else
+	{
+	    int cc=1;
+		printf("Graph is not connected\n{");
+		for(int i=0;i<j;i++)
+		    if(!con[i])
+		    {
+		        cc++;
+		        printf(" }{ ");
+		    }
+		    else
+		     printf(" %d ",con[i]);
+	    printf(" }\nThere are %d connected component\n",cc);
+	}
+	if(acy)
+		printf("Graph is Acyclic\n");
+	else
+		printf("Graph is Cyclic\n");	
+}
+void main()
+{
+	int i,j;
+	printf("Enter the number of vertices : ");
+	scanf("%d",&n);
+	for(i=1;i<=n;i++)
+		visit[i]=-1;
+	printf("Enter the adjacency matrix : \n");
+	for(i=1;i<=n;i++)
+		for(j=1;j<=n;j++)
+		{
+		    c++;
+		    scanf("%d",&a[i][j]);
+		}
+	dfs(1);
+	concyc();
+	printf("The operation count is : %d\n",c);
 }
