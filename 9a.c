@@ -1,48 +1,36 @@
-//Test
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #define MAX 100
-int graph[MAX][MAX], visited[MAX],path[MAX], count=0;
-int stack[MAX], top=-1;
-int c=0;
-
-void dfs(int n, int start) {
+int count;
+int top = -1, stack[MAX];
+void dfs(int graph[][MAX], int visited[], int n, int start)
+{
     visited[start] = 1;
-    path[start] =1;
-    for(int i=0; i<n; i++)
-      {
-          if(graph[start][i] && visited[i]==1&& path[i]==1)
-              c=1 ;
-        if(graph[start][i] && visited[i]==0)
-            dfs(n, i);
-       }
-       path[start]=0;
+    for (int i = 0; i < n; i++)
+    {
+        count++;
+        if (graph[start][i] && visited[i] == 0)
+            dfs(graph, visited, n, i);
+    }
     stack[++top] = start;
 }
-
 void main()
- {
-    int n;
-    printf("\nEnter the number of vertices:\n");
+{
+    int graph[MAX][MAX], visited[MAX] = {0}, n, i, j;
+    printf("\nEnter the number of nodes in the graph:\n");
     scanf("%d", &n);
     printf("\nEnter the adjacency matrix:\n");
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++) 
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
             scanf("%d", &graph[i][j]);
-        visited[i] = 0;
-    }
-    
-    printf("\nTopological Order:\n");
-    for(int i=0; i<n; i++) {
-        if(visited[i] == 0)
-            dfs(n, i);
-    }
-    if(c==1)
+    printf("\nThe topological order is:\n");
+    for (int i = 0; i < n; i++)
     {
-       printf("IT HAS A LOOP SO NO TOPOLOGICAL ORDER\n");
-       return ;
+        count++;
+        if (visited[i] == 0)
+            dfs(graph, visited, n, i);
     }
-    for(int i=0; i<n; i++) {
-        printf(" --> %c", stack[i]+65);
-    }
+    while (top != -1)
+        printf("%d -> ", stack[top--]);
+    printf("\nCount : %d \n", count);
 }
